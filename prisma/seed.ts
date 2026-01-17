@@ -122,9 +122,9 @@ async function main() {
   // Create global AddOns
   await prisma.addOn.createMany({
     data: [
-      { name: 'Bánh thêm', price: 2000, unit: 'que' },
+      { name: 'Bánh thêm', price: 1000, unit: 'que' },
       { name: 'Socola thêm', price: 10000, unit: 'túi' },
-      { name: 'Túi thêm', price: 1000, unit: 'túi' },
+      { name: 'Túi thêm', price: 500, unit: 'túi' },
       { name: 'Charm thêm', price: 5000, unit: 'túi' },
       { name: 'Bánh bông lan thêm', price: 18000, unit: 'cái' },
       { name: 'Cupcake thêm', price: 500, unit: 'cái' },

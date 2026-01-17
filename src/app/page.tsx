@@ -141,13 +141,16 @@ export default function PeperoCustomizer() {
     } else if (delta > 0) {
       const charmSet = queSets.find(s => s.id === setId);
       if (charmSet) {
-        // Fix: Find actual price for this specific set (Cakepop is 71k, Pepero is 60k)
+        // Fix: Find actual price AND category name for this specific set
         let realPrice = 60000;
+        let categoryName = 'Set'; // Default fallback
+
         if (catalogData) {
           for (const cat of catalogData.categories) {
             const p = cat.products.find(prod => prod.id === setId);
             if (p) {
               realPrice = p.price;
+              categoryName = cat.name;
               break;
             }
           }
@@ -156,7 +159,8 @@ export default function PeperoCustomizer() {
         const productWithCorrectPrice = { 
           ...product, 
           basePrice: realPrice, 
-          price: realPrice 
+          price: realPrice,
+          name: categoryName // Store "Pepero" or "Cakepop" here
         };
         
         addToCart(productWithCorrectPrice, 1, charmSet, [], '');

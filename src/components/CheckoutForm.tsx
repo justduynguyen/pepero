@@ -158,7 +158,8 @@ export default function CheckoutForm({ isOpen, onClose, totalPrice }: CheckoutFo
           const charmDetails = i.selectedCharmSet?.charms
             .map(c => `${c.emoji} ${c.name}`)
             .join(', ');
-          return `${i.selectedCharmSet?.name} (${charmDetails}) x${i.quantity}`;
+          // Prepend Product Name (Category) to differentiate sets
+          return `${i.product.name} - ${i.selectedCharmSet?.name} (${charmDetails}) x${i.quantity}`;
         });
 
       const addOnsGroupedBySets = cart.items
