@@ -31,7 +31,7 @@ export default function Cart({ isOpen: externalIsOpen, onClose: externalOnClose 
 
   // Fetch fresh product images from catalog API
   useEffect(() => {
-    fetch('/api/catalog')
+    fetch(`/api/catalog?t=${Date.now()}`, { cache: 'no-store' })
       .then(res => res.json())
       .then(data => {
         if (data.success) {

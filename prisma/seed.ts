@@ -130,9 +130,17 @@ async function main() {
   // Create global AddOns with fixed IDs
   const addonsData = [
     { id: 'addon-banh-pepero', name: 'Bánh thêm', price: 1000, unit: 'que' },
-    { id: 'addon-socola', name: 'Socola thêm', price: 10000, unit: 'túi' },
+    
+    // Split Socola
+    { id: 'addon-socola-pepero', name: 'Socola thêm (Pepero)', price: 10000, unit: 'túi' },
+    { id: 'addon-socola-cakepop', name: 'Socola thêm (Cakepop)', price: 10000, unit: 'túi' },
+
     { id: 'addon-tui-pepero', name: 'Túi thêm', price: 500, unit: 'túi' },
-    { id: 'addon-charm', name: 'Charm thêm', price: 5000, unit: 'túi' },
+    
+    // Split Charm
+    { id: 'addon-charm-pepero', name: 'Charm thêm (Pepero)', price: 5000, unit: 'túi' },
+    { id: 'addon-charm-cakepop', name: 'Charm thêm (Cakepop)', price: 5000, unit: 'túi' },
+
     { id: 'addon-banh-cakepop', name: 'Bánh bông lan thêm', price: 18000, unit: 'cái' },
     { id: 'addon-cupcake', name: 'Cupcake thêm', price: 500, unit: 'cái' },
     { id: 'addon-hop-cakepop', name: 'Hộp đựng cakepop thêm', price: 5000, unit: 'cái' },

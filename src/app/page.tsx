@@ -39,7 +39,8 @@ export default function PeperoCustomizer() {
 
   // Fetch catalog data on mount
   useEffect(() => {
-    fetch('/api/catalog')
+    // Add cache busting to ensure we get the latest IDs after a re-seed
+    fetch(`/api/catalog?t=${Date.now()}`, { cache: 'no-store' })
       .then(res => res.json())
       .then((data: CatalogResponse) => {
         if (data.success) {
