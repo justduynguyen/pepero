@@ -183,9 +183,11 @@ export default function Cart({ isOpen: externalIsOpen, onClose: externalOnClose 
                           {/* Header Row: Tên & Nút xóa */}
                           <div className='flex justify-between items-start'>
                             <div>
-                              <h3 className='font-bold text-gray-900 line-clamp-1'>
-                                {item.selectedCharmSet ? item.selectedCharmSet.name : item.product.name}
-                              </h3>
+                                <h3 className='font-bold text-gray-900 line-clamp-1'>
+                                  {item.selectedCharmSet 
+                                    ? `${item.product.name} - ${item.selectedCharmSet.name}` 
+                                    : item.product.name}
+                                </h3>
                               {item.selectedCharmSet && (
                                 <div className='flex flex-wrap gap-1 mt-1'>
                                   {item.selectedCharmSet.charms.map(c => (

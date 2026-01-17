@@ -29,7 +29,7 @@ const containerVariants = {
 
 export default function PeperoCustomizer() {
   // 1. Destructure new update methods from Context
-  const { addToCart, cart, updateQuantity, updateAddonQuantity } = useCart();
+  const { addToCart, cart, updateQuantity, updateAddonQuantity, loadCart } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   
@@ -109,6 +109,52 @@ export default function PeperoCustomizer() {
   }), [queSets, catalogData]);
 
   useEffect(() => {
+    // --- SANITIZE CART: Remove Legacy Items ---
+    // If catalog is loaded, check if cart items are valid.
+    // Invalid items (old IDs, old names) should be removed to prevent submission errors.
+    if (catalogData && cart.items.length > 0) {
+      const validProductIds = new Set(queSets.map(p => p.id));
+      const validProductNames = new Set(queSets.map(p => p.name));
+      
+      const validAddonIds = new Set(availableAddOns.map(a => a.id));
+      const validAddonNames = new Set(availableAddOns.map(a => a.name));
+
+      const sanitizedItems = cart.items.filter(item => {
+        if (item.selectedCharmSet) {
+          // It's a Product Set
+          const isValidId = validProductIds.has(item.selectedCharmSet.id);
+          const isValidName = validProductNames.has(item.selectedCharmSet.name);
+          return isValidId || isValidName;
+        } else {
+          // It's an Addon
+          // Addons are stored in selectedAddOns array
+          const addons = item.selectedAddOns;
+          if (!addons || addons.length === 0) return false; // Should not happen for addon-type items
+          
+          // Check if at least one addon in this item is valid (usually length is 1)
+          return addons.every(addon => 
+             validAddonIds.has(addon.id) || validAddonNames.has(addon.name)
+          );
+        }
+      });
+
+      if (sanitizedItems.length !== cart.items.length) {
+        console.log('🧹 Cart sanitized: Removed legacy items', cart.items.length - sanitizedItems.length);
+        
+        // Recalculate totals
+        const newTotalItems = sanitizedItems.reduce((sum, item) => sum + item.quantity, 0);
+        const newTotalPrice = sanitizedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+        
+        loadCart({
+          items: sanitizedItems,
+          totalItems: newTotalItems,
+          totalPrice: newTotalPrice
+        });
+      }
+    }
+  }, [catalogData, queSets, availableAddOns, cart.items, loadCart]);
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const dismissed = localStorage.getItem(WELCOME_MODAL_KEY);
       if (!dismissed) {
@@ -124,9 +170,10 @@ export default function PeperoCustomizer() {
 
   // --- CORE LOGIC: HELPER TO FIND ITEMS ---
   const findCartItem = (id: string, type: 'set' | 'addon') => {
+    // Strict match by ID only
+    // This prevents "Set A" (Pepero) from matching "Set A" (Cakepop)
     return cart.items.find(item => {
       if (type === 'set') return item.selectedCharmSet?.id === id;
-      // For addons, we check if this item is an Addon-Only item (no charm set)
       if (type === 'addon') return !item.selectedCharmSet && item.selectedAddOns.some(a => a.id === id);
       return false;
     });

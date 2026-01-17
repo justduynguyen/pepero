@@ -16,6 +16,7 @@ interface CartContextType {
   updateQuantity: (itemId: string, quantity: number) => void;
   updateAddonQuantity: (itemId: string, delta: number) => void;
   clearCart: () => void;
+  loadCart: (cart: Cart) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -222,6 +223,10 @@ export function CartProvider({ children }: { readonly children: React.ReactNode 
     dispatch({ type: 'CLEAR_CART' });
   };
 
+  const loadCart = (cart: Cart) => {
+    dispatch({ type: 'LOAD_CART', payload: cart });
+  };
+
   const value = useMemo(
     () => ({
       cart,
@@ -230,6 +235,7 @@ export function CartProvider({ children }: { readonly children: React.ReactNode 
       updateQuantity,
       updateAddonQuantity,
       clearCart,
+      loadCart,
     }),
     [cart]
   );

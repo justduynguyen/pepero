@@ -23,6 +23,8 @@ const cakepopComponents = [
   { icon: '📦', label: '1 Hộp Trắng' },
   { icon: '◀', label: '3 Túi Bắt Kem' },
   { icon: '🧁', label: '12 Cupcake' },
+  { icon: '📜', label: 'Giấy Nến' },
+  { icon: '🍬', label: '3 Charm Decor' },
 ];
 
 // Charm data for sets
@@ -48,9 +50,10 @@ async function main() {
   await prisma.addOn.deleteMany();
   await prisma.category.deleteMany();
 
-  // Create categories
+  // Create categories with fixed IDs
   const pepero = await prisma.category.create({
     data: {
+      id: 'cat-pepero-001',
       slug: 'pepero',
       name: 'Pepero',
       image: '/imgs/Set-1.jpg',
@@ -59,15 +62,17 @@ async function main() {
 
   const cakepop = await prisma.category.create({
     data: {
+      id: 'cat-cakepop-002',
       slug: 'cakepop',
       name: 'Cakepop',
       image: '/imgs/Set-1.jpg',
     },
   });
 
-  // Create Pepero products (Set A & Set B)
+  // Create Pepero products with fixed IDs
   const peperoSetA = await prisma.product.create({
     data: {
+      id: 'prod-pepero-set-a',
       name: 'Set A',
       price: 60000,
       image: '/imgs/Set-1.jpg',
@@ -81,6 +86,7 @@ async function main() {
 
   const peperoSetB = await prisma.product.create({
     data: {
+      id: 'prod-pepero-set-b',
       name: 'Set B',
       price: 60000,
       image: '/imgs/Set-2.jpg',
@@ -92,9 +98,10 @@ async function main() {
     },
   });
 
-  // Create Cakepop products (Set A & Set B)
+  // Create Cakepop products with fixed IDs
   const cakepopSetA = await prisma.product.create({
     data: {
+      id: 'prod-cakepop-set-a',
       name: 'Set A',
       price: 71000,
       image: '/imgs/Set-1.jpg',
@@ -108,6 +115,7 @@ async function main() {
 
   const cakepopSetB = await prisma.product.create({
     data: {
+      id: 'prod-cakepop-set-b',
       name: 'Set B',
       price: 71000,
       image: '/imgs/Set-2.jpg',
@@ -119,18 +127,20 @@ async function main() {
     },
   });
 
-  // Create global AddOns
-  await prisma.addOn.createMany({
-    data: [
-      { name: 'Bánh thêm', price: 1000, unit: 'que' },
-      { name: 'Socola thêm', price: 10000, unit: 'túi' },
-      { name: 'Túi thêm', price: 500, unit: 'túi' },
-      { name: 'Charm thêm', price: 5000, unit: 'túi' },
-      { name: 'Bánh bông lan thêm', price: 18000, unit: 'cái' },
-      { name: 'Cupcake thêm', price: 500, unit: 'cái' },
-      { name: 'Hộp đựng cakepop thêm', price: 5000, unit: 'cái' },
-    ],
-  });
+  // Create global AddOns with fixed IDs
+  const addonsData = [
+    { id: 'addon-banh-pepero', name: 'Bánh thêm', price: 1000, unit: 'que' },
+    { id: 'addon-socola', name: 'Socola thêm', price: 10000, unit: 'túi' },
+    { id: 'addon-tui-pepero', name: 'Túi thêm', price: 500, unit: 'túi' },
+    { id: 'addon-charm', name: 'Charm thêm', price: 5000, unit: 'túi' },
+    { id: 'addon-banh-cakepop', name: 'Bánh bông lan thêm', price: 18000, unit: 'cái' },
+    { id: 'addon-cupcake', name: 'Cupcake thêm', price: 500, unit: 'cái' },
+    { id: 'addon-hop-cakepop', name: 'Hộp đựng cakepop thêm', price: 5000, unit: 'cái' },
+  ];
+
+  for (const addon of addonsData) {
+    await prisma.addOn.create({ data: addon });
+  }
 
   console.log('✅ Seeding completed!');
   console.log(`   Categories: ${pepero.name}, ${cakepop.name}`);
