@@ -36,6 +36,7 @@ export interface DBAddOn {
   unit: string;
   image: string | null;
   isAvailable: boolean;
+  categoryId: string | null;
 }
 
 export interface ComponentItem {
@@ -65,6 +66,7 @@ export interface AddOn {
   name: string;
   price: number;
   unit: string;
+  categoryId?: string;
 }
 
 export interface Product {
@@ -144,6 +146,7 @@ export function adaptDBAddOnToFrontend(addon: DBAddOn): AddOn {
     name: addon.name,
     price: addon.price,
     unit: addon.unit,
+    categoryId: addon.categoryId || undefined,
   };
 }
 

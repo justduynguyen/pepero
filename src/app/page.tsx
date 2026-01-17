@@ -27,6 +27,8 @@ const containerVariants = {
   },
 };
 
+
+
 export default function PeperoCustomizer() {
   // 1. Destructure new update methods from Context
   const { addToCart, cart, updateQuantity, updateAddonQuantity, loadCart } = useCart();
@@ -635,11 +637,13 @@ export default function PeperoCustomizer() {
              <div className='bg-white/40 backdrop-blur-sm border-2 border-dashed border-amber-200/40 rounded-[2rem] p-4 relative overflow-hidden'>
               <div className='grid grid-cols-1 gap-3 relative z-10'>
                 {availableAddOns
-                  .filter(a => ['Bánh bông lan thêm', 'Cupcake thêm', 'Hộp đựng cakepop thêm', 'Socola thêm (Cakepop)', 'Charm thêm (Cakepop)'].includes(a.name))
+                  .filter(a => cakepopCategory && a.categoryId === cakepopCategory.id)
                   .map(addOn => {
                   const existingItem = findCartItem(addOn.id, 'addon');
                   const quantity = existingItem && existingItem.selectedAddOns.length > 0 ? existingItem.selectedAddOns[0].quantity : 0;
                   const isSelected = quantity > 0;
+                  // Remove suffix for display only (keep full name for cart)
+                  const displayName = addOn.name.replace(/ \((Pepero|Cakepop)\)$/, '');
 
                   return (
                     <div
@@ -655,7 +659,7 @@ export default function PeperoCustomizer() {
                           🎁
                         </div>
                         <div>
-                          <h4 className={`font-bold text-sm ${isSelected ? 'text-gray-900' : 'text-gray-600'}`}>{addOn.name}</h4>
+                          <h4 className={`font-bold text-sm ${isSelected ? 'text-gray-900' : 'text-gray-600'}`}>{displayName}</h4>
                           <p className='text-amber-600 font-bold text-xs'>
                             {addOn.price.toLocaleString()}đ <span className='text-gray-400 font-normal'>/ {addOn.unit}</span>
                           </p>
@@ -692,13 +696,15 @@ export default function PeperoCustomizer() {
              <div className='bg-white/40 backdrop-blur-sm border-2 border-dashed border-rose-200/40 rounded-[2rem] p-4 relative overflow-hidden'>
               <div className='grid grid-cols-1 gap-3 relative z-10'>
                 {availableAddOns
-                  .filter(a => ['Bánh thêm', 'Túi thêm', 'Socola thêm (Pepero)', 'Charm thêm (Pepero)'].includes(a.name))
+                  .filter(a => peperoCategory && a.categoryId === peperoCategory.id)
                   .map(addOn => {
                   const existingItem = findCartItem(addOn.id, 'addon');
                   // Use a distinctive identifier for this section if needed, but for now quantity is shared globaly for the addon ID.
                   // Since 'Socola thêm' and 'Charm thêm' are in both, their quantity will sync. This is likely desired.
                   const quantity = existingItem && existingItem.selectedAddOns.length > 0 ? existingItem.selectedAddOns[0].quantity : 0;
                   const isSelected = quantity > 0;
+                  // Remove suffix for display only (keep full name for cart)
+                  const displayName = addOn.name.replace(/ \((Pepero|Cakepop)\)$/, '');
 
                   return (
                     <div
@@ -714,7 +720,7 @@ export default function PeperoCustomizer() {
                           🎁
                         </div>
                         <div>
-                          <h4 className={`font-bold text-sm ${isSelected ? 'text-gray-900' : 'text-gray-600'}`}>{addOn.name}</h4>
+                          <h4 className={`font-bold text-sm ${isSelected ? 'text-gray-900' : 'text-gray-600'}`}>{displayName}</h4>
                           <p className='text-rose-600 font-bold text-xs'>
                             {addOn.price.toLocaleString()}đ <span className='text-gray-400 font-normal'>/ {addOn.unit}</span>
                           </p>

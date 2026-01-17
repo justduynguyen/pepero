@@ -127,23 +127,20 @@ async function main() {
     },
   });
 
-  // Create global AddOns with fixed IDs
+  // Create global AddOns with fixed IDs and Category links
   const addonsData = [
-    { id: 'addon-banh-pepero', name: 'Bánh thêm', price: 1000, unit: 'que' },
-    
-    // Split Socola
-    { id: 'addon-socola-pepero', name: 'Socola thêm (Pepero)', price: 10000, unit: 'túi' },
-    { id: 'addon-socola-cakepop', name: 'Socola thêm (Cakepop)', price: 10000, unit: 'túi' },
+    // --- PEPERO ADDONS ---
+    { id: 'addon-banh-pepero', name: 'Bánh thêm', price: 1000, unit: 'que', categoryId: pepero.id },
+    { id: 'addon-socola-pepero', name: 'Socola thêm (Pepero)', price: 10000, unit: 'túi', categoryId: pepero.id },
+    { id: 'addon-tui-pepero', name: 'Túi thêm', price: 500, unit: 'túi', categoryId: pepero.id },
+    { id: 'addon-charm-pepero', name: 'Charm thêm (Pepero)', price: 5000, unit: 'túi', categoryId: pepero.id },
 
-    { id: 'addon-tui-pepero', name: 'Túi thêm', price: 500, unit: 'túi' },
-    
-    // Split Charm
-    { id: 'addon-charm-pepero', name: 'Charm thêm (Pepero)', price: 5000, unit: 'túi' },
-    { id: 'addon-charm-cakepop', name: 'Charm thêm (Cakepop)', price: 5000, unit: 'túi' },
-
-    { id: 'addon-banh-cakepop', name: 'Bánh bông lan thêm', price: 18000, unit: 'cái' },
-    { id: 'addon-cupcake', name: 'Cupcake thêm', price: 500, unit: 'cái' },
-    { id: 'addon-hop-cakepop', name: 'Hộp đựng cakepop thêm', price: 5000, unit: 'cái' },
+    // --- CAKEPOP ADDONS ---
+    { id: 'addon-banh-cakepop', name: 'Bánh bông lan thêm', price: 18000, unit: 'cái', categoryId: cakepop.id },
+    { id: 'addon-socola-cakepop', name: 'Socola thêm (Cakepop)', price: 10000, unit: 'túi', categoryId: cakepop.id },
+    { id: 'addon-charm-cakepop', name: 'Charm thêm (Cakepop)', price: 5000, unit: 'túi', categoryId: cakepop.id },
+    { id: 'addon-cupcake', name: 'Cupcake thêm', price: 500, unit: 'cái', categoryId: cakepop.id },
+    { id: 'addon-hop-cakepop', name: 'Hộp đựng cakepop thêm', price: 5000, unit: 'cái', categoryId: cakepop.id },
   ];
 
   for (const addon of addonsData) {

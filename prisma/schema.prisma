@@ -13,6 +13,7 @@ model Category {
   name      String
   image     String?
   products  Product[]
+  addons    AddOn[]
   createdAt DateTime  @default(now())
 }
 
@@ -37,10 +38,12 @@ model Charm {
 }
 
 model AddOn {
-  id          String  @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   price       Int
   unit        String
   image       String?
-  isAvailable Boolean @default(true)
+  isAvailable Boolean   @default(true)
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
 }

@@ -157,25 +157,20 @@ export default function Cart({ isOpen: externalIsOpen, onClose: externalOnClose 
                 </div>
               ) : (
                 <div className='space-y-4'>
-                  {cart.items.map(item => {
-                    // Tính toán số lượng hiện tại để hiển thị và tính đơn giá
-                    const currentQuantity = item.selectedCharmSet ? item.quantity : item.selectedAddOns[0].quantity;
-                    // Tính đơn giá (Unit Price) = Tổng tiền / Số lượng
+                  {/* 1. RENDER SETS (Main Items) */}
+                  {cart.items.filter(item => item.selectedCharmSet).map(item => {
+                    const currentQuantity = item.quantity;
                     const unitPrice = item.totalPrice / currentQuantity;
 
                     return (
                       <div key={item.id} className='modern-card p-4 flex gap-3'>
                         {/* Product Image */}
                         <div className='relative w-20 h-20 shrink-0 rounded-xl overflow-hidden bg-gray-100 border border-gray-100'>
-                          {item.selectedCharmSet ? (
-                            <img 
-                              src={getProductImage(item.selectedCharmSet.name, item.selectedCharmSet.image)} 
-                              alt={item.selectedCharmSet.name} 
-                              className='w-full h-full object-cover' 
-                            />
-                          ) : (
-                            <div className='w-full h-full flex items-center justify-center bg-rose-50 text-3xl'>🎁</div>
-                          )}
+                          <img 
+                            src={item.selectedCharmSet ? getProductImage(item.selectedCharmSet.name, item.selectedCharmSet.image) : ''} 
+                            alt={item.product.name} 
+                            className='w-full h-full object-cover' 
+                          />
                         </div>
 
                         {/* Content Wrapper */}
@@ -184,9 +179,7 @@ export default function Cart({ isOpen: externalIsOpen, onClose: externalOnClose 
                           <div className='flex justify-between items-start'>
                             <div>
                                 <h3 className='font-bold text-gray-900 line-clamp-1'>
-                                  {item.selectedCharmSet 
-                                    ? `${item.product.name} - ${item.selectedCharmSet.name}` 
-                                    : item.product.name}
+                                  {item.selectedCharmSet ? `${item.product.name} - ${item.selectedCharmSet.name}` : item.product.name}
                                 </h3>
                               {item.selectedCharmSet && (
                                 <div className='flex flex-wrap gap-1 mt-1'>
@@ -200,60 +193,31 @@ export default function Cart({ isOpen: externalIsOpen, onClose: externalOnClose 
                             </div>
                             <button onClick={() => removeFromCart(item.id)} className='text-gray-400 hover:text-red-500 p-1 shrink-0 ml-2'>
                               <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                                <path
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth={2}
-                                  d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16'
-                                />
+                                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16' />
                               </svg>
                             </button>
                           </div>
-
-                          {/* Addons */}
-                          {item.selectedAddOns.length > 0 && (
-                            <div className='mt-2 bg-rose-50/50 rounded-lg p-2 text-xs text-gray-600 space-y-1 border border-rose-100'>
-                              {item.selectedAddOns.map(addon => (
-                                <div key={addon.id} className='flex justify-between'>
-                                  <span>
-                                    + {addon.name} (x{addon.quantity})
-                                  </span>
-                                  <span className='font-semibold text-rose-600'>{formatPrice(addon.price * addon.quantity)}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
 
                           {/* Note */}
                           {item.note && <div className='text-xs text-amber-700 bg-amber-50 p-2 rounded-lg mt-2 italic'>💌 {item.note}</div>}
 
                           {/* Footer Row: Đơn giá & Số lượng */}
                           <div className='mt-auto pt-3 flex items-center justify-between w-full'>
-                            {/* 1. Đơn giá x (Bên trái) */}
                             <span className='font-bold text-rose-600 text-base sm:text-lg whitespace-nowrap'>
                               {formatPrice(unitPrice)} <span className="text-gray-400 font-normal text-sm">x</span>
                             </span>
 
-                            {/* 2. Bộ nút tăng giảm (Bên phải) */}
                             <div className='flex items-center ml-1 gap-3 bg-gray-50 rounded-full p-1 border border-gray-200 shrink-0'>
                               <button
-                                onClick={() => {
-                                  if (item.selectedCharmSet) updateQuantity(item.id, item.quantity - 1);
-                                  else updateAddonQuantity(item.id, -1);
-                                }}
+                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                 className='w-7 h-7 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-rose-600 transition-colors'>
                                 -
                               </button>
-
                               <span className='text-sm font-bold w-6 text-center select-none'>
                                 {currentQuantity}
                               </span>
-
                               <button
-                                onClick={() => {
-                                  if (item.selectedCharmSet) updateQuantity(item.id, item.quantity + 1);
-                                  else updateAddonQuantity(item.id, 1);
-                                }}
+                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                 className='w-7 h-7 rounded-full bg-white shadow-sm flex items-center justify-center text-rose-600 hover:bg-rose-50 transition-colors'>
                                 +
                               </button>
@@ -263,6 +227,73 @@ export default function Cart({ isOpen: externalIsOpen, onClose: externalOnClose 
                       </div>
                     );
                   })}
+
+                  {/* 2. RENDER ADDONS (Grouped Block) */}
+                  {cart.items.some(item => !item.selectedCharmSet) && (
+                    <div className='bg-white rounded-2xl shadow-sm border border-rose-100 p-4'>
+                      <div className='flex items-center gap-2 mb-3 pb-2 border-b border-rose-50'>
+                        <span className='text-lg'>✨</span>
+                        <h3 className='font-bold text-gray-800 text-sm uppercase tracking-wide'>Món mua thêm</h3>
+                      </div>
+                      
+                      <div className='space-y-3'>
+                        {cart.items.filter(item => !item.selectedCharmSet).map(item => {
+                           const addon = item.selectedAddOns[0];
+                           const currentQuantity = addon.quantity;
+                           
+                           // Parse category from suffix
+                           const isPepero = addon.name.includes('(Pepero)');
+                           const isCakepop = addon.name.includes('(Cakepop)');
+                           const displayName = addon.name.replace(/ \((Pepero|Cakepop)\)$/, '');
+
+                           return (
+                             <div key={item.id} className='flex items-center justify-between group'>
+                               <div className='flex items-center gap-3'>
+                                 <button 
+                                   onClick={() => removeFromCart(item.id)}
+                                   className='w-6 h-6 flex items-center justify-center rounded-full text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors -ml-1'
+                                 >
+                                   <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' /></svg>
+                                 </button>
+                                 
+                                 <div>
+                                   <div className='flex items-center gap-2'>
+                                      <div className={`w-1.5 h-1.5 rounded-full ${isCakepop ? 'bg-amber-400' : 'bg-rose-400'}`}></div>
+                                      <span className='font-medium text-gray-700 text-sm'>
+                                        {displayName}
+                                      </span>
+                                      {/* Distinct Badges */}
+                                      {isPepero && <span className='text-[9px] font-bold bg-rose-50 text-rose-500 px-1.5 py-0.5 rounded border border-rose-100'>Pepero</span>}
+                                      {isCakepop && <span className='text-[9px] font-bold bg-amber-50 text-amber-500 px-1.5 py-0.5 rounded border border-amber-100'>Cakepop</span>}
+                                   </div>
+                                   <div className='text-xs text-rose-500 font-bold ml-3.5'>
+                                     {formatPrice(addon.price)}
+                                   </div>
+                                 </div>
+                               </div>
+
+                               <div className='flex items-center gap-2 bg-gray-50 rounded-lg p-1 border border-gray-100'>
+                                 <button
+                                   onClick={() => updateAddonQuantity(item.id, -1)}
+                                   className='w-6 h-6 rounded bg-white shadow-sm flex items-center justify-center text-gray-500 hover:text-rose-600 text-xs disabled:opacity-50'
+                                   disabled={currentQuantity <= 1}
+                                 >
+                                   -
+                                 </button>
+                                 <span className='text-xs font-bold w-4 text-center'>{currentQuantity}</span>
+                                 <button
+                                   onClick={() => updateAddonQuantity(item.id, 1)}
+                                   className='w-6 h-6 rounded bg-white shadow-sm flex items-center justify-center text-rose-600 hover:bg-rose-50 text-xs'
+                                 >
+                                   +
+                                 </button>
+                               </div>
+                             </div>
+                           );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
