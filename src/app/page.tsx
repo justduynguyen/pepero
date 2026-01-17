@@ -114,27 +114,18 @@ export default function PeperoCustomizer() {
     // Invalid items (old IDs, old names) should be removed to prevent submission errors.
     if (catalogData && cart.items.length > 0) {
       const validProductIds = new Set(queSets.map(p => p.id));
-      const validProductNames = new Set(queSets.map(p => p.name));
-      
       const validAddonIds = new Set(availableAddOns.map(a => a.id));
-      const validAddonNames = new Set(availableAddOns.map(a => a.name));
 
       const sanitizedItems = cart.items.filter(item => {
         if (item.selectedCharmSet) {
-          // It's a Product Set
-          const isValidId = validProductIds.has(item.selectedCharmSet.id);
-          const isValidName = validProductNames.has(item.selectedCharmSet.name);
-          return isValidId || isValidName;
+          // STRICT ID CHECK: Name is not enough anymore.
+          // This ensures items match exactly what is in the database (with hardcoded IDs).
+          return validProductIds.has(item.selectedCharmSet.id);
         } else {
-          // It's an Addon
-          // Addons are stored in selectedAddOns array
           const addons = item.selectedAddOns;
-          if (!addons || addons.length === 0) return false; // Should not happen for addon-type items
+          if (!addons || addons.length === 0) return false;
           
-          // Check if at least one addon in this item is valid (usually length is 1)
-          return addons.every(addon => 
-             validAddonIds.has(addon.id) || validAddonNames.has(addon.name)
-          );
+          return addons.every(addon => validAddonIds.has(addon.id));
         }
       });
 
