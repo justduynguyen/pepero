@@ -635,7 +635,7 @@ export default function PeperoCustomizer() {
              <div className='bg-white/40 backdrop-blur-sm border-2 border-dashed border-amber-200/40 rounded-[2rem] p-4 relative overflow-hidden'>
               <div className='grid grid-cols-1 gap-3 relative z-10'>
                 {availableAddOns
-                  .filter(a => ['Bánh bông lan thêm', 'Cupcake thêm', 'Hộp đựng cakepop thêm', 'Socola thêm', 'Charm thêm'].includes(a.name))
+                  .filter(a => ['Bánh bông lan thêm', 'Cupcake thêm', 'Hộp đựng cakepop thêm', 'Socola thêm (Cakepop)', 'Charm thêm (Cakepop)'].includes(a.name))
                   .map(addOn => {
                   const existingItem = findCartItem(addOn.id, 'addon');
                   const quantity = existingItem && existingItem.selectedAddOns.length > 0 ? existingItem.selectedAddOns[0].quantity : 0;
@@ -692,7 +692,7 @@ export default function PeperoCustomizer() {
              <div className='bg-white/40 backdrop-blur-sm border-2 border-dashed border-rose-200/40 rounded-[2rem] p-4 relative overflow-hidden'>
               <div className='grid grid-cols-1 gap-3 relative z-10'>
                 {availableAddOns
-                  .filter(a => ['Bánh thêm', 'Túi thêm', 'Socola thêm', 'Charm thêm'].includes(a.name))
+                  .filter(a => ['Bánh thêm', 'Túi thêm', 'Socola thêm (Pepero)', 'Charm thêm (Pepero)'].includes(a.name))
                   .map(addOn => {
                   const existingItem = findCartItem(addOn.id, 'addon');
                   // Use a distinctive identifier for this section if needed, but for now quantity is shared globaly for the addon ID.
