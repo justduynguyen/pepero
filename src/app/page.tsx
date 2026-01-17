@@ -141,7 +141,25 @@ export default function PeperoCustomizer() {
     } else if (delta > 0) {
       const charmSet = queSets.find(s => s.id === setId);
       if (charmSet) {
-        addToCart(product, 1, charmSet, [], '');
+        // Fix: Find actual price for this specific set (Cakepop is 71k, Pepero is 60k)
+        let realPrice = 60000;
+        if (catalogData) {
+          for (const cat of catalogData.categories) {
+            const p = cat.products.find(prod => prod.id === setId);
+            if (p) {
+              realPrice = p.price;
+              break;
+            }
+          }
+        }
+
+        const productWithCorrectPrice = { 
+          ...product, 
+          basePrice: realPrice, 
+          price: realPrice 
+        };
+        
+        addToCart(productWithCorrectPrice, 1, charmSet, [], '');
       }
     }
   };

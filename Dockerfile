@@ -26,8 +26,21 @@ FROM node:20-slim AS runner
 
 WORKDIR /app
 
+# Install OpenSSL for Prisma
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 # Set production environment
 ENV NODE_ENV=production
+
+# Copy package files and install production dependencies (needed for seed script)
+COPY --from=builder /app/package*.json ./
+RUN npm ci --omit=dev
+
+# Copy Prisma configuration and schema
+COPY --from=builder /app/prisma.config.ts ./
+COPY --from=builder /app/prisma/schema.prisma ./prisma/
+COPY --from=builder /app/prisma/migrations ./prisma/migrations
+RUN npx prisma generate
 
 # Copy necessary files from builder
 COPY --from=builder /app/public ./public
