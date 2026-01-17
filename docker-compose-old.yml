@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pepero
+      POSTGRES_PASSWORD: pepero_secret
+      POSTGRES_DB: pepero_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pepero -d pepero_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Nginx Proxy Manager - Reverse Proxy with SSL
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS
+      - "81:81"      # Admin UI
+    environment:
+      - DB_SQLITE_FILE=/data/database.sqlite
+    volumes:
+      - npm-data:/data
+      - npm-letsencrypt:/etc/letsencrypt
+    restart: unless-stopped
+
+  # Pepero App
+  pepero-app:
+    # Original configuration used remote image
+    image: justduynguyen/pepero-app:latest
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://pepero:pepero_secret@postgres:5432/pepero_db
+      - GOOGLE_SHEETS_CREDENTIALS=${GOOGLE_SHEETS_CREDENTIALS}
+      - GOOGLE_SHEET_ID=${GOOGLE_SHEET_ID}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  npm-data:
+  npm-letsencrypt:
