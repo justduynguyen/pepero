@@ -1,0 +1,46 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  slug      String    @unique
+  name      String
+  image     String?
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  price       Int
+  image       String
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  components  Json     // Structure: { icon: string, label: string }[]
+  charms      Charm[]
+  createdAt   DateTime @default(now())
+}
+
+model Charm {
+  id        String  @id @default(uuid())
+  emoji     String
+  name      String?
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model AddOn {
+  id          String  @id @default(uuid())
+  name        String
+  price       Int
+  unit        String
+  image       String?
+  isAvailable Boolean @default(true)
+}

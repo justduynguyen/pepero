@@ -1,0 +1,30 @@
+# Build standalone output
+node_modules
+.next
+out
+dist
+build
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env*.local
+.env
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md

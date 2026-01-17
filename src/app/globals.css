@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #fb7185; /* Rose 400 */
+  --primary-dark: #e11d48; /* Rose 600 */
+  --secondary: #fef08a; /* Yellow 200 */
+  --accent-yellow: #facc15; /* Yellow 400 */
+  --surface: #ffffff;
+  --background: #ffffff/* #fff1f2;  Rose 50 */
+  --text-main: #374151;
+  --text-sub: #6b7280;
+}
+
+@theme inline {
+  --font-sans: 'Be Vietnam Pro', 'Rubik', sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  /* Modern Dot Pattern Background */
+  background-image: radial-gradient(#fb7185 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+  background-attachment: fixed;
+}
+
+/* Soft overlay to blend the dots so they aren't too harsh */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(255, 241, 242, 0.8) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Modern Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-header {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(251, 113, 133, 0.1);
+}
+
+/* Modern Card */
+.modern-card {
+  background: white;
+  border-radius: 1rem; /* Rounded-3xl */
+  box-shadow: 0 4px 6px -1px rgba(251, 113, 133, 0.05), 0 2px 4px -1px rgba(251, 113, 133, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* border: 1px solid transparent; */
+}
+
+.modern-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(251, 113, 133, 0.15), 0 10px 10px -5px rgba(251, 113, 133, 0.1);
+  border-color: var(--primary);
+}
+
+.modern-card.selected {
+  border-color: var(--primary);
+  background-color: #fff1f2; /* Rose 50 */
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* Modern Button */
+.btn-modern {
+  border-radius: 9999px; /* Full rounded */
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(251, 113, 133, 0.3);
+}
+
+.btn-modern:active {
+  transform: scale(0.96);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+  color: white;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  background: #cbd5e1;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--primary-dark);
+  border: 1px solid var(--primary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #fda4af;
+  border-radius: 4px;
+}
