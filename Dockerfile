@@ -15,6 +15,9 @@ COPY . .
 # Generate Prisma Client
 RUN npx prisma generate
 
+# Compile seed script
+RUN npx tsc prisma/seed.ts --module CommonJS --moduleResolution node --target ES2020 --skipLibCheck
+
 # Build the Next.js app
 RUN npm run build
 
@@ -30,6 +33,7 @@ ENV NODE_ENV=production
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/prisma/seed.js ./prisma/seed.js
 
 # Expose port
 EXPOSE 3000
