@@ -19,23 +19,11 @@ services:
       timeout: 5s
       retries: 5
 
-  # Nginx Proxy Manager - Reverse Proxy with SSL
-  nginx-proxy-manager:
-    image: jc21/nginx-proxy-manager:latest
-    ports:
-      - "80:80"      # HTTP
-      - "443:443"    # HTTPS
-      - "81:81"      # Admin UI
-    environment:
-      - DB_SQLITE_FILE=/data/database.sqlite
-    volumes:
-      - npm-data:/data
-      - npm-letsencrypt:/etc/letsencrypt
-    restart: unless-stopped
 
   # Pepero App
   pepero-app:
-    image: justduynguyen/pepero-app:latest
+    build: .
+    image: pepero-app:local
     expose:
       - "3000"
     environment:
@@ -43,6 +31,9 @@ services:
       - DATABASE_URL=postgresql://pepero:pepero_secret@postgres:5432/pepero_db
       - GOOGLE_SHEETS_CREDENTIALS=${GOOGLE_SHEETS_CREDENTIALS}
       - GOOGLE_SHEET_ID=${GOOGLE_SHEET_ID}
+    networks:
+      - default
+      - web-network
     depends_on:
       postgres:
         condition: service_healthy
@@ -50,5 +41,7 @@ services:
 
 volumes:
   postgres-data:
-  npm-data:
-  npm-letsencrypt:
+
+networks:
+  web-network:
+    external: true
