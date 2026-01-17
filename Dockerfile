@@ -16,7 +16,7 @@ COPY . .
 RUN npx prisma generate
 
 # Compile seed script
-RUN npx tsc prisma/seed.ts --module CommonJS --moduleResolution node --target ES2020 --skipLibCheck
+RUN npx tsc prisma/seed.ts --module CommonJS --moduleResolution node --target ES2020 --skipLibCheck --esModuleInterop
 
 # Build the Next.js app
 RUN npm run build
